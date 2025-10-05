@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calories Counter AI</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Calories Counter AI</h1>
+    <p>Snap or upload your meal. Get instant nutrition facts powered by AI.</p>
+    <form id="uploadForm">
+      <label for="mealPhoto" class="upload-label">
+        <span>📷 Upload or Capture Meal Photo</span>
+        <input type="file" id="mealPhoto" name="mealPhoto" accept="image/*" capture="environment" required>
+      </label>
+      <button type="submit" id="analyzeBtn">Analyze</button>
+    </form>
+    <div id="result"></div>
+  </main>
+  <script>
+    const form = document.getElementById('uploadForm');
+    const resultDiv = document.getElementById('result');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      resultDiv.innerHTML = '';
+      analyzeBtn.disabled = true;
+      analyzeBtn.textContent = 'Analyzing...';
+
+      const fileInput = document.getElementById('mealPhoto');
+      if (!fileInput.files.length) {
+        resultDiv.textContent = 'Please select a photo.';
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Analyze';
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('mealPhoto', fileInput.files[0]);
+
+      try {
+        // Replace with your n8n webhook or AI API endpoint:
+        const response = await fetch('https://your-n8n-instance.com/webhook/nutrition-analyze', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) throw new Error('Failed to analyze image.');
+
+        const data = await response.json();
+        // Expecting: { protein: 10, carbs: 20, fat: 5 }
+        resultDiv.innerHTML = `
+          <h2>Nutrition Facts</h2>
+          <ul>
+            <li><strong>Protein:</strong> ${data.protein}g</li>
+            <li><strong>Carbs:</strong> ${data.carbs}g</li>
+            <li><strong>Fat:</strong> ${data.fat}g</li>
+          </ul>
+        `;
+      } catch (err) {
+        resultDiv.textContent = 'Error: ' + err.message;
+      } finally {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = 'Analyze';
+      }
+    });
+  </script>
+</body>
+</html>
