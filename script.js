@@ -29,7 +29,7 @@ uploadArea.addEventListener("drop", (e) => {
 // handle file logic
 function handleFile(file) {
   if (!file || !file.type.startsWith("image/")) {
-    showError("Please upload a valid image.");
+    showError("Please upload a valid image file.");
     return;
   }
   selectedFile = file;
@@ -62,7 +62,14 @@ analyzeBtn.addEventListener("click", async () => {
     if (!response.ok) throw new Error("Network error");
     const data = await response.json();
 
-    displayResult(data);
+    // ✅ handle response.output instead of output
+    const output = data[0]?.response?.output;
+    if (!output || !output.food) {
+      showError("Invalid response format from AI server.");
+      return;
+    }
+
+    displayResult(output);
   } catch (err) {
     showError("Server error. Please try again.");
     console.error(err);
@@ -72,44 +79,38 @@ analyzeBtn.addEventListener("click", async () => {
   analyzeBtn.textContent = "Analyze";
 });
 
-function displayResult(data) {
-  try {
-    const result = data[0]?.output;
-    if (!result || result.status !== "OK") {
-      showError("Invalid response from AI server.");
-      return;
-    }
+function displayResult(output) {
+  resultDiv.innerHTML = "";
 
-    resultDiv.innerHTML = "";
+  const status = output.status || "done";
+  const title = document.createElement("h3");
+  title.textContent = `Meal Breakdown (${status})`;
+  resultDiv.appendChild(title);
 
-    result.food.forEach((item) => {
-      const card = document.createElement("div");
-      card.classList.add("food-card");
-      card.innerHTML = `
-        <h3>${item.name}</h3>
-        <p><strong>Quantity:</strong> ${item.quantity}</p>
-        <p><strong>Calories:</strong> ${item.calories} kcal</p>
-        <p><strong>Protein:</strong> ${item.protein} g</p>
-        <p><strong>Carbs:</strong> ${item.carbs} g</p>
-        <p><strong>Fat:</strong> ${item.fat} g</p>
-      `;
-      resultDiv.appendChild(card);
-    });
-
-    const total = result.total;
-    const totalCard = document.createElement("div");
-    totalCard.classList.add("total-card");
-    totalCard.innerHTML = `
-      <h3>Total</h3>
-      <p>${total.calories} kcal | P: ${total.protein}g | C: ${total.carbs}g | F: ${total.fat}g</p>
+  output.food.forEach((item) => {
+    const card = document.createElement("div");
+    card.classList.add("food-card");
+    card.innerHTML = `
+      <h3>${item.name}</h3>
+      <p><strong>Quantity:</strong> ${item.quantity}</p>
+      <p><strong>Calories:</strong> ${item.calories} kcal</p>
+      <p><strong>Protein:</strong> ${item.protein} g</p>
+      <p><strong>Carbs:</strong> ${item.carbs} g</p>
+      <p><strong>Fat:</strong> ${item.fat} g</p>
     `;
-    resultDiv.appendChild(totalCard);
+    resultDiv.appendChild(card);
+  });
 
-    resultDiv.classList.remove("hidden");
-  } catch (e) {
-    showError("Error displaying results.");
-    console.error(e);
-  }
+  const total = output.total;
+  const totalCard = document.createElement("div");
+  totalCard.classList.add("total-card");
+  totalCard.innerHTML = `
+    <h3>Total</h3>
+    <p>${total.calories} kcal | P: ${total.protein}g | C: ${total.carbs}g | F: ${total.fat}g</p>
+  `;
+  resultDiv.appendChild(totalCard);
+
+  resultDiv.classList.remove("hidden");
 }
 
 function showError(message) {
