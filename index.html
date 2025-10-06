@@ -3,21 +3,23 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meal Analyzer</title>
+    <title>AI Meal Analyzer</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
       <h1>AI Meal Analyzer</h1>
 
-      <div id="drop-zone" class="drop-zone">
-        <p>Drag & drop an image here or click to upload</p>
+      <div id="dropZone" class="drop-zone">
+        <div class="drop-content">
+          <div class="upload-icon">📷</div>
+          <p>Drag & drop or click to upload an image</p>
+        </div>
         <input type="file" id="fileInput" accept="image/*" hidden />
-        <img id="preview" class="preview hidden" />
+        <img id="preview" class="preview hidden" alt="Preview" />
       </div>
 
-      <button id="analyzeBtn" disabled>Analyze</button>
-
+      <button id="analyzeBtn" disabled>Analyze Meal</button>
       <div id="errorMsg" class="error hidden"></div>
       <div id="result" class="hidden"></div>
     </div>

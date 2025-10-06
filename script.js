@@ -1,4 +1,4 @@
-const dropZone = document.getElementById("drop-zone");
+const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("fileInput");
 const preview = document.getElementById("preview");
 const analyzeBtn = document.getElementById("analyzeBtn");
@@ -7,28 +7,32 @@ const resultDiv = document.getElementById("result");
 
 let selectedFile = null;
 
-// --- File Selection ---
+/* ==========================
+   🔹 FILE UPLOAD HANDLING
+   ========================== */
 dropZone.addEventListener("click", () => fileInput.click());
 
 fileInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
 
 dropZone.addEventListener("dragover", (e) => {
   e.preventDefault();
-  dropZone.style.borderColor = "#4f46e5";
+  dropZone.classList.add("dragover");
 });
+
 dropZone.addEventListener("dragleave", () => {
-  dropZone.style.borderColor = "#ccc";
+  dropZone.classList.remove("dragover");
 });
+
 dropZone.addEventListener("drop", (e) => {
   e.preventDefault();
-  dropZone.style.borderColor = "#ccc";
+  dropZone.classList.remove("dragover");
   const file = e.dataTransfer.files[0];
   handleFile(file);
 });
 
 function handleFile(file) {
   if (!file || !file.type.startsWith("image/")) {
-    showError("Please upload a valid image.");
+    showError("Please upload a valid image file.");
     return;
   }
 
@@ -44,7 +48,9 @@ function handleFile(file) {
   errorMsg.classList.add("hidden");
 }
 
-// --- Analyze Button ---
+/* ==========================
+   🔹 ANALYZE MEAL
+   ========================== */
 analyzeBtn.addEventListener("click", async () => {
   if (!selectedFile) return;
   analyzeBtn.disabled = true;
@@ -63,10 +69,11 @@ analyzeBtn.addEventListener("click", async () => {
 
     if (!response.ok) throw new Error("Network error");
 
-    let data = await response.json();
-    console.log("Raw data:", data);
+    const data = await response.json();
+    console.log("Raw response:", data);
 
-    let output =
+    // Flexible parsing for all expected formats
+    const output =
       data[0]?.response?.output ||
       data[0]?.output ||
       data?.response?.output ||
@@ -80,29 +87,27 @@ analyzeBtn.addEventListener("click", async () => {
 
     displayResult(output);
   } catch (err) {
+    console.error("Error:", err);
     showError("Failed to connect to AI server.");
-    console.error(err);
+  } finally {
+    analyzeBtn.disabled = false;
+    analyzeBtn.textContent = "Analyze Meal";
   }
-
-  analyzeBtn.disabled = false;
-  analyzeBtn.textContent = "Analyze";
 });
 
-function showError(msg) {
-  errorMsg.textContent = msg;
-  errorMsg.classList.remove("hidden");
-}
-
+/* ==========================
+   🔹 DISPLAY RESULT
+   ========================== */
 function displayResult(output) {
   resultDiv.innerHTML = "";
-
   const title = document.createElement("h3");
   title.textContent = "Meal Breakdown";
   resultDiv.appendChild(title);
 
-  output.food.forEach((item) => {
+  output.food.forEach((item, i) => {
     const card = document.createElement("div");
     card.classList.add("food-card");
+    card.style.animationDelay = `${i * 0.1}s`;
     card.innerHTML = `
       <h4>${item.name}</h4>
       <p><b>Quantity:</b> ${item.quantity}</p>
@@ -127,4 +132,12 @@ function displayResult(output) {
   resultDiv.appendChild(totalCard);
 
   resultDiv.classList.remove("hidden");
+}
+
+/* ==========================
+   🔹 ERROR DISPLAY
+   ========================== */
+function showError(msg) {
+  errorMsg.textContent = msg;
+  errorMsg.classList.remove("hidden");
 }
