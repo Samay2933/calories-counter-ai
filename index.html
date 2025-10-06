@@ -14,7 +14,7 @@
     }
 
     body {
-      background: #fafafa;
+      background: #fdfdfd;
       color: #333;
       display: flex;
       flex-direction: column;
@@ -25,149 +25,176 @@
 
     header {
       width: 100%;
-      background: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c') center/cover no-repeat;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c') center/cover no-repeat;
       text-align: center;
       padding: 100px 20px;
       color: white;
-      position: relative;
-    }
-
-    header::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1;
-    }
-
-    header h1, header p {
-      position: relative;
-      z-index: 2;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
     }
 
     header h1 {
-      font-size: 2.8rem;
+      font-size: 3rem;
       font-weight: 700;
     }
 
     header span {
-      color: #ffa500;
+      color: #ff9f1c;
     }
 
     header p {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-top: 10px;
+      color: #eee;
     }
 
     section {
       background: #fff;
-      margin-top: -40px;
-      border-radius: 16px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-top: -60px;
+      border-radius: 20px;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.1);
       padding: 40px;
       text-align: center;
       width: 90%;
-      max-width: 700px;
+      max-width: 800px;
     }
 
     h2 {
       font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 30px;
+      color: #222;
     }
 
     .steps {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
+      gap: 20px;
     }
 
     .step {
-      width: 180px;
-      padding: 15px;
-      background: #f9f9f9;
-      border-radius: 10px;
-      margin: 10px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      background: #f8f9fb;
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1 1 180px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: 0.3s ease;
+    }
+
+    .step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .step-number {
-      background: #ffa500;
+      background: #ff9f1c;
       color: white;
       font-weight: bold;
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 10px;
+      font-size: 1.1rem;
     }
 
     .upload-box {
-      border: 2px dashed #ffa500;
-      border-radius: 12px;
-      padding: 30px;
+      border: 2px dashed #ff9f1c;
+      border-radius: 16px;
+      padding: 50px 30px;
       background: #fffaf0;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
     }
 
     .upload-box:hover {
-      background: #fff4e0;
+      background: #fff3e6;
+      transform: scale(1.02);
+    }
+
+    .upload-box.dragover {
+      background: #ffe9cc;
+      border-color: #ff6f00;
     }
 
     .upload-box input {
       display: none;
     }
 
+    .preview-img {
+      margin-top: 20px;
+      max-width: 150px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
     .analyze-btn {
       margin-top: 20px;
-      background: #ffa500;
+      background: #ff9f1c;
       border: none;
       color: white;
-      font-size: 1rem;
-      padding: 12px 40px;
-      border-radius: 25px;
+      font-size: 1.1rem;
+      padding: 14px 50px;
+      border-radius: 30px;
       cursor: pointer;
-      transition: 0.3s;
+      transition: 0.3s ease;
     }
 
     .analyze-btn:hover {
-      background: #ff8800;
+      background: #ff7b00;
     }
 
     .results {
-      margin-top: 30px;
+      margin-top: 40px;
       text-align: left;
     }
 
     .food-item {
-      background: #f7f7f7;
-      border-radius: 8px;
-      padding: 10px 15px;
+      background: #f7f9fa;
+      border-radius: 12px;
+      padding: 15px 20px;
       margin-bottom: 10px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
     }
 
     .food-item strong {
-      color: #ffa500;
+      color: #ff9f1c;
+    }
+
+    .alert {
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+
+    .alert.error {
+      background: #ffe5e5;
+      color: #d8000c;
+      border: 1px solid #ffbaba;
+    }
+
+    .alert.success {
+      background: #e5ffef;
+      color: #2d7a2d;
+      border: 1px solid #a2f5c7;
     }
 
     .loading {
-      color: #ffa500;
+      color: #ff9f1c;
       font-weight: 600;
       margin-top: 20px;
+      text-align: center;
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: 60px;
       font-size: 0.9rem;
-      color: #555;
+      color: #777;
     }
   </style>
 </head>
@@ -199,6 +226,8 @@
       <input id="file-upload" type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tiff" />
     </label>
 
+    <img id="previewImg" class="preview-img" style="display:none;" />
+
     <button class="analyze-btn" id="analyzeBtn">Analyze</button>
 
     <div id="result" class="results"></div>
@@ -213,27 +242,40 @@
     const uploadBox = document.getElementById('uploadBox');
     const analyzeBtn = document.getElementById('analyzeBtn');
     const resultBox = document.getElementById('result');
+    const previewImg = document.getElementById('previewImg');
 
     uploadBox.addEventListener('click', () => fileInput.click());
 
     uploadBox.addEventListener('dragover', (e) => {
       e.preventDefault();
-      uploadBox.style.background = '#fff0d6';
+      uploadBox.classList.add('dragover');
     });
 
-    uploadBox.addEventListener('dragleave', () => {
-      uploadBox.style.background = '#fffaf0';
-    });
+    uploadBox.addEventListener('dragleave', () => uploadBox.classList.remove('dragover'));
 
     uploadBox.addEventListener('drop', (e) => {
       e.preventDefault();
       fileInput.files = e.dataTransfer.files;
-      uploadBox.style.background = '#fffaf0';
+      showPreview(fileInput.files[0]);
+      uploadBox.classList.remove('dragover');
     });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length) showPreview(fileInput.files[0]);
+    });
+
+    function showPreview(file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        previewImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
 
     analyzeBtn.addEventListener('click', async () => {
       if (!fileInput.files.length) {
-        alert('Please upload an image first!');
+        showAlert('Please upload an image first!', 'error');
         return;
       }
 
@@ -249,28 +291,31 @@
           body: formData
         });
 
+        if (!response.ok) throw new Error('Failed to connect to AI server');
+
         const data = await response.json();
         displayResults(data);
       } catch (error) {
-        resultBox.innerHTML = `<p style="color:red;">Error analyzing meal: ${error.message}</p>`;
+        showAlert(`Oops! Something went wrong: ${error.message}`, 'error');
       }
     });
 
     function displayResults(data) {
       if (!data || !data[0] || !data[0].output) {
-        resultBox.innerHTML = '<p style="color:red;">Invalid response from AI server.</p>';
+        showAlert('Invalid response from AI server. Please try again.', 'error');
         return;
       }
 
       const output = data[0].output;
-      let html = `<h3>Meal Analysis</h3>`;
+      let html = `<div class="alert success">✅ Analysis complete! Here are your results:</div>`;
+      html += `<h3 style="margin-top:20px;">Meal Analysis</h3>`;
 
       output.food.forEach(item => {
         html += `
           <div class="food-item">
             <strong>${item.name}</strong><br>
             Quantity: ${item.quantity}<br>
-            Calories: ${item.calories} kcal | Protein: ${item.protein}g | Carbs: ${item.carbs}g | Fat: ${item.fat}g
+            🍽️ Calories: ${item.calories} kcal | 🥩 Protein: ${item.protein}g | 🍞 Carbs: ${item.carbs}g | 🧈 Fat: ${item.fat}g
           </div>
         `;
       });
@@ -286,6 +331,10 @@
       `;
 
       resultBox.innerHTML = html;
+    }
+
+    function showAlert(message, type) {
+      resultBox.innerHTML = `<div class="alert ${type}">${message}</div>`;
     }
   </script>
 </body>
