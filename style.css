@@ -4,27 +4,26 @@
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  background: #fafafa;
+  background: #f4f6fa;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  margin: 0;
 }
 
 .container {
-  background: #fff;
+  background: white;
   border-radius: 16px;
   padding: 2rem;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
 header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1.8rem;
 }
 
 .upload-section {
@@ -33,14 +32,14 @@ header {
   text-align: center;
   padding: 2rem;
   position: relative;
-  transition: 0.3s;
+  background: #fafafa;
   cursor: pointer;
-  background: #fdfdfd;
+  transition: all 0.3s ease;
 }
 
 .upload-section.dragover {
   border-color: #0078ff;
-  background: #f0f8ff;
+  background: #eef7ff;
 }
 
 .upload-icon {
@@ -50,30 +49,36 @@ header {
 
 .browse-btn {
   color: #0078ff;
-  cursor: pointer;
   font-weight: 600;
+  cursor: pointer;
+}
+
+.preview-img {
+  width: 100%;
+  border-radius: 12px;
+  object-fit: cover;
 }
 
 #analyzeBtn {
-  display: block;
-  margin: 1.5rem auto 0;
-  padding: 0.8rem 2rem;
+  margin-top: 1.2rem;
+  width: 100%;
+  padding: 0.8rem;
   border: none;
+  border-radius: 10px;
   background: #0078ff;
   color: white;
   font-size: 1rem;
-  border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
+}
+
+#analyzeBtn:hover:not(:disabled) {
+  background: #005fcc;
 }
 
 #analyzeBtn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-
-#analyzeBtn:hover:not(:disabled) {
-  background: #005fcc;
 }
 
 .hidden {
@@ -86,8 +91,8 @@ header {
 }
 
 .food-card {
-  background: #f5f7fa;
-  border-radius: 12px;
+  background: #f8fafc;
+  border-radius: 10px;
   padding: 1rem;
   margin-bottom: 0.8rem;
   box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -100,7 +105,7 @@ header {
 
 .food-card p {
   margin: 4px 0;
-  color: #666;
+  color: #555;
   font-size: 0.9rem;
 }
 
@@ -108,14 +113,14 @@ header {
   background: #0078ff;
   color: white;
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 10px;
   text-align: center;
 }
 
 #errorMsg {
   margin-top: 1rem;
-  color: #ff4d4d;
-  background: #ffecec;
+  background: #ffe6e6;
+  color: #d60000;
   border-radius: 8px;
   padding: 0.8rem;
   text-align: center;

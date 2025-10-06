@@ -1,40 +1,47 @@
 const uploadArea = document.getElementById("uploadArea");
-const imageUpload = document.getElementById("imageUpload");
+const uploadInput = document.getElementById("imageUpload");
 const analyzeBtn = document.getElementById("analyzeBtn");
 const resultDiv = document.getElementById("result");
 const errorMsg = document.getElementById("errorMsg");
 
 let selectedFile = null;
 
-// Handle click upload
-uploadArea.addEventListener("click", () => imageUpload.click());
+// open file picker when clicked
+uploadArea.addEventListener("click", () => uploadInput.click());
 
-// Handle file selection
-imageUpload.addEventListener("change", (e) => {
-  selectedFile = e.target.files[0];
-  if (selectedFile) {
-    analyzeBtn.disabled = false;
-    uploadArea.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" class="preview-img" style="width:100%; border-radius:10px;" alt="Preview">`;
-  }
-});
+// when file selected
+uploadInput.addEventListener("change", (e) => handleFile(e.target.files[0]));
 
-// Drag & Drop handlers
+// drag/drop functionality
 uploadArea.addEventListener("dragover", (e) => {
   e.preventDefault();
   uploadArea.classList.add("dragover");
 });
+
 uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("dragover"));
+
 uploadArea.addEventListener("drop", (e) => {
   e.preventDefault();
   uploadArea.classList.remove("dragover");
-  selectedFile = e.dataTransfer.files[0];
-  if (selectedFile) {
-    analyzeBtn.disabled = false;
-    uploadArea.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" class="preview-img" style="width:100%; border-radius:10px;" alt="Preview">`;
-  }
+  handleFile(e.dataTransfer.files[0]);
 });
 
-// Analyze Button
+// handle file logic
+function handleFile(file) {
+  if (!file || !file.type.startsWith("image/")) {
+    showError("Please upload a valid image.");
+    return;
+  }
+  selectedFile = file;
+  analyzeBtn.disabled = false;
+  const reader = new FileReader();
+  reader.onload = () => {
+    uploadArea.innerHTML = `<img src="${reader.result}" class="preview-img" alt="Preview">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// analyze button logic
 analyzeBtn.addEventListener("click", async () => {
   if (!selectedFile) return;
 
@@ -47,17 +54,18 @@ analyzeBtn.addEventListener("click", async () => {
   formData.append("image", selectedFile);
 
   try {
-    const response = await fetch('https://phantoos.app.n8n.cloud/webhook-test/meal-ai', {
-      method: 'POST',
-      body: formData
+    const response = await fetch("https://phantoos.app.n8n.cloud/webhook-test/meal-ai", {
+      method: "POST",
+      body: formData,
     });
 
+    if (!response.ok) throw new Error("Network error");
     const data = await response.json();
-    displayResult(data);
 
-  } catch (error) {
-    showError("Server Error. Please try again.");
-    console.error(error);
+    displayResult(data);
+  } catch (err) {
+    showError("Server error. Please try again.");
+    console.error(err);
   }
 
   analyzeBtn.disabled = false;
@@ -68,13 +76,13 @@ function displayResult(data) {
   try {
     const result = data[0]?.output;
     if (!result || result.status !== "OK") {
-      showError("Could not analyze the meal. Please try again.");
+      showError("Invalid response from AI server.");
       return;
     }
 
     resultDiv.innerHTML = "";
 
-    result.food.forEach(item => {
+    result.food.forEach((item) => {
       const card = document.createElement("div");
       card.classList.add("food-card");
       card.innerHTML = `
@@ -98,9 +106,9 @@ function displayResult(data) {
     resultDiv.appendChild(totalCard);
 
     resultDiv.classList.remove("hidden");
-  } catch (err) {
+  } catch (e) {
     showError("Error displaying results.");
-    console.error(err);
+    console.error(e);
   }
 }
 
