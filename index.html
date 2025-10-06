@@ -1,32 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Meal Analyzer</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <header>
-      <h1>🍽️ AI Meal Analyzer</h1>
-      <p>Upload your meal photo to get a detailed nutritional breakdown</p>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meal Analyzer</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>AI Meal Analyzer</h1>
 
-    <div class="upload-section" id="uploadArea">
-      <div class="upload-content">
-        <div class="upload-icon">📷</div>
-        <p>Drag & Drop or <span class="browse-btn">Click to Upload</span></p>
+      <div id="drop-zone" class="drop-zone">
+        <p>Drag & drop an image here or click to upload</p>
+        <input type="file" id="fileInput" accept="image/*" hidden />
+        <img id="preview" class="preview hidden" />
       </div>
-      <input type="file" id="imageUpload" accept="image/*" hidden />
+
+      <button id="analyzeBtn" disabled>Analyze</button>
+
+      <div id="errorMsg" class="error hidden"></div>
+      <div id="result" class="hidden"></div>
     </div>
 
-    <button id="analyzeBtn" disabled>Analyze</button>
-
-    <div id="result" class="hidden"></div>
-    <div id="errorMsg" class="hidden"></div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>
