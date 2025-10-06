@@ -1,36 +1,50 @@
-const fileInput = document.getElementById('fileInput');
-const uploadArea = document.getElementById('uploadArea');
-const analyzeBtn = document.getElementById('analyzeBtn');
-const resultBox = document.getElementById('result');
+const uploadArea = document.getElementById("uploadArea");
+const imageUpload = document.getElementById("imageUpload");
+const analyzeBtn = document.getElementById("analyzeBtn");
+const resultDiv = document.getElementById("result");
+const errorMsg = document.getElementById("errorMsg");
 
-uploadArea.addEventListener('click', () => fileInput.click());
+let selectedFile = null;
 
-uploadArea.addEventListener('dragover', e => {
-  e.preventDefault();
-  uploadArea.style.background = '#fff3d9';
-});
+// Handle click upload
+uploadArea.addEventListener("click", () => imageUpload.click());
 
-uploadArea.addEventListener('dragleave', () => {
-  uploadArea.style.background = '#fffaf0';
-});
-
-uploadArea.addEventListener('drop', e => {
-  e.preventDefault();
-  fileInput.files = e.dataTransfer.files;
-  uploadArea.style.background = '#fffaf0';
-});
-
-analyzeBtn.addEventListener('click', async () => {
-  if (!fileInput.files.length) {
-    alert('Please upload an image first!');
-    return;
+// Handle file selection
+imageUpload.addEventListener("change", (e) => {
+  selectedFile = e.target.files[0];
+  if (selectedFile) {
+    analyzeBtn.disabled = false;
+    uploadArea.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" class="preview-img" style="width:100%; border-radius:10px;" alt="Preview">`;
   }
+});
 
-  const file = fileInput.files[0];
+// Drag & Drop handlers
+uploadArea.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  uploadArea.classList.add("dragover");
+});
+uploadArea.addEventListener("dragleave", () => uploadArea.classList.remove("dragover"));
+uploadArea.addEventListener("drop", (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove("dragover");
+  selectedFile = e.dataTransfer.files[0];
+  if (selectedFile) {
+    analyzeBtn.disabled = false;
+    uploadArea.innerHTML = `<img src="${URL.createObjectURL(selectedFile)}" class="preview-img" style="width:100%; border-radius:10px;" alt="Preview">`;
+  }
+});
+
+// Analyze Button
+analyzeBtn.addEventListener("click", async () => {
+  if (!selectedFile) return;
+
+  resultDiv.classList.add("hidden");
+  errorMsg.classList.add("hidden");
+  analyzeBtn.disabled = true;
+  analyzeBtn.textContent = "Analyzing...";
+
   const formData = new FormData();
-  formData.append('image', file);
-
-  resultBox.innerHTML = '<p class="loading">Analyzing your meal... ⏳</p>';
+  formData.append("image", selectedFile);
 
   try {
     const response = await fetch('https://phantoos.app.n8n.cloud/webhook-test/meal-ai', {
@@ -39,43 +53,58 @@ analyzeBtn.addEventListener('click', async () => {
     });
 
     const data = await response.json();
-    displayResults(data);
+    displayResult(data);
+
   } catch (error) {
-    resultBox.innerHTML = `<p style="color:red; font-weight:600;">⚠️ Oops! Something went wrong.<br>${error.message}</p>`;
+    showError("Server Error. Please try again.");
+    console.error(error);
   }
+
+  analyzeBtn.disabled = false;
+  analyzeBtn.textContent = "Analyze";
 });
 
-function displayResults(data) {
-  if (!data || !data[0] || !data[0].output) {
-    resultBox.innerHTML = '<p style="color:#ff4444;">⚠️ Invalid response from AI server. Please try again.</p>';
-    return;
-  }
+function displayResult(data) {
+  try {
+    const result = data[0]?.output;
+    if (!result || result.status !== "OK") {
+      showError("Could not analyze the meal. Please try again.");
+      return;
+    }
 
-  const output = data[0].output;
-  let html = `<h3>🍽️ Meal Breakdown</h3>`;
+    resultDiv.innerHTML = "";
 
-  output.food.forEach((item, index) => {
-    html += `
-      <div class="food-item" style="animation-delay:${index * 0.1}s;">
-        <strong>${item.name}</strong><br>
-        <small>${item.quantity}</small><br>
-        <b>Calories:</b> ${item.calories} kcal | 
-        <b>Protein:</b> ${item.protein}g | 
-        <b>Carbs:</b> ${item.carbs}g | 
-        <b>Fat:</b> ${item.fat}g
-      </div>
+    result.food.forEach(item => {
+      const card = document.createElement("div");
+      card.classList.add("food-card");
+      card.innerHTML = `
+        <h3>${item.name}</h3>
+        <p><strong>Quantity:</strong> ${item.quantity}</p>
+        <p><strong>Calories:</strong> ${item.calories} kcal</p>
+        <p><strong>Protein:</strong> ${item.protein} g</p>
+        <p><strong>Carbs:</strong> ${item.carbs} g</p>
+        <p><strong>Fat:</strong> ${item.fat} g</p>
+      `;
+      resultDiv.appendChild(card);
+    });
+
+    const total = result.total;
+    const totalCard = document.createElement("div");
+    totalCard.classList.add("total-card");
+    totalCard.innerHTML = `
+      <h3>Total</h3>
+      <p>${total.calories} kcal | P: ${total.protein}g | C: ${total.carbs}g | F: ${total.fat}g</p>
     `;
-  });
+    resultDiv.appendChild(totalCard);
 
-  html += `
-    <h4 style="margin-top:15px;">Total Nutrition</h4>
-    <div class="food-item" style="animation-delay:${output.food.length * 0.1}s;">
-      <b>Calories:</b> ${output.total.calories} kcal<br>
-      <b>Protein:</b> ${output.total.protein} g<br>
-      <b>Carbs:</b> ${output.total.carbs} g<br>
-      <b>Fat:</b> ${output.total.fat} g
-    </div>
-  `;
+    resultDiv.classList.remove("hidden");
+  } catch (err) {
+    showError("Error displaying results.");
+    console.error(err);
+  }
+}
 
-  resultBox.innerHTML = html;
+function showError(message) {
+  errorMsg.textContent = message;
+  errorMsg.classList.remove("hidden");
 }
