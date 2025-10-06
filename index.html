@@ -1,217 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calories Counter AI</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
+    * {
       margin: 0;
-      font-family: 'Montserrat', Arial, sans-serif;
-      background: #f6f8fa;
-      color: #222;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
-    .hero {
-      position: relative;
-      height: 260px;
+
+    body {
+      background: #fafafa;
+      color: #333;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      min-height: 100vh;
     }
-    .hero-bg {
+
+    header {
+      width: 100%;
+      background: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c') center/cover no-repeat;
+      text-align: center;
+      padding: 100px 20px;
+      color: white;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      filter: blur(2px) brightness(0.7);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1;
     }
-    .hero-content {
+
+    header h1, header p {
       position: relative;
       z-index: 2;
-      color: #fff;
-      text-align: center;
     }
-    .hero-content h1 {
-      font-size: 2.5rem;
-      margin: 0;
-      letter-spacing: 1px;
+
+    header h1 {
+      font-size: 2.8rem;
+      font-weight: 700;
     }
-    .hero-content h1 span {
-      color: #ff9800;
+
+    header span {
+      color: #ffa500;
     }
-    .hero-content p {
+
+    header p {
       font-size: 1.2rem;
-      margin-top: 0.5rem;
+      margin-top: 10px;
     }
-    .instructions {
-      margin: 2rem auto 1rem;
-      max-width: 600px;
+
+    section {
+      background: #fff;
+      margin-top: -40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 40px;
       text-align: center;
+      width: 90%;
+      max-width: 700px;
     }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
     .steps {
       display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin-top: 1rem;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
     }
+
     .step {
-      background: #fff;
-      border-radius: 1rem;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      width: 180px;
+      padding: 15px;
+      background: #f9f9f9;
+      border-radius: 10px;
+      margin: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
-    .step span {
-      background: #ff9800;
-      color: #fff;
+
+    .step-number {
+      background: #ffa500;
+      color: white;
+      font-weight: bold;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      width: 2rem;
-      height: 2rem;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      margin-right: 0.5rem;
+      margin-bottom: 10px;
     }
-    .upload-section {
-      display: flex;
-      justify-content: center;
-      margin: 2rem 0;
-    }
-    .dropzone {
-      display: block;
-      background: #fff3e0;
-      color: #ff9800;
-      border: 2px dashed #ff9800;
-      border-radius: 1rem;
-      padding: 2rem 3rem;
+
+    .upload-box {
+      border: 2px dashed #ffa500;
+      border-radius: 12px;
+      padding: 30px;
+      background: #fffaf0;
       cursor: pointer;
-      font-size: 1.1rem;
-      margin-bottom: 1rem;
-      transition: background 0.2s, border-color 0.2s;
-      text-align: center;
+      transition: 0.3s;
     }
-    .dropzone:hover {
-      background: #ffe0b2;
-      border-color: #fb8c00;
+
+    .upload-box:hover {
+      background: #fff4e0;
     }
-    input[type="file"] {
+
+    .upload-box input {
       display: none;
     }
-    #analyzeBtn {
-      background: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
-      color: #fff;
+
+    .analyze-btn {
+      margin-top: 20px;
+      background: #ffa500;
       border: none;
-      padding: 0.9rem 2.5rem;
-      border-radius: 2rem;
-      font-size: 1.1rem;
-      font-weight: 700;
+      color: white;
+      font-size: 1rem;
+      padding: 12px 40px;
+      border-radius: 25px;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(255,152,0,0.15);
-      transition: transform 0.1s, box-shadow 0.1s;
+      transition: 0.3s;
     }
-    #analyzeBtn:hover {
-      transform: translateY(-2px) scale(1.04);
-      box-shadow: 0 4px 16px rgba(255,152,0,0.18);
+
+    .analyze-btn:hover {
+      background: #ff8800;
     }
-    .result-section {
-      max-width: 500px;
-      margin: 2rem auto;
-      background: #fff;
-      border-radius: 1rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      padding: 1.5rem;
-      text-align: center;
-      animation: fadeIn 0.5s;
-    }
-    .result-section table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    .result-section th, .result-section td {
-      padding: 6px 8px;
-      border-bottom: 1px solid #eee;
-      text-align: right;
-    }
-    .result-section th {
-      background: #fff3e0;
-      color: #ff9800;
+
+    .results {
+      margin-top: 30px;
       text-align: left;
     }
-    .result-section td:first-child, .result-section th:first-child {
-      text-align: left;
+
+    .food-item {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
-    .result-section tr:last-child td {
-      border-bottom: none;
+
+    .food-item strong {
+      color: #ffa500;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px);}
-      to { opacity: 1; transform: translateY(0);}
+
+    .loading {
+      color: #ffa500;
+      font-weight: 600;
+      margin-top: 20px;
     }
-    @media (max-width: 700px) {
-      .steps { flex-direction: column; gap: 1rem; }
-      .hero { height: 180px; }
-      .result-section { padding: 1rem; }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.9rem;
+      color: #555;
     }
   </style>
 </head>
 <body>
-  <div class="hero">
-    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=800&q=80" alt="Healthy Food" class="hero-bg">
-    <div class="hero-content">
-      <h1>Calories Counter <span>AI</span></h1>
-      <p>Snap or upload your meal. Get instant, AI-powered nutrition facts.</p>
-    </div>
-  </div>
-  <main>
-    <section class="instructions">
-      <h2>How it works</h2>
-      <div class="steps">
-        <div class="step"><span>1</span> Upload or snap a meal photo</div>
-        <div class="step"><span>2</span> Click <strong>Analyze</strong></div>
-        <div class="step"><span>3</span> Instantly see nutrition facts</div>
+  <header>
+    <h1>Calories Counter <span>AI</span></h1>
+    <p>Snap or upload your meal. Get instant AI-powered nutrition facts.</p>
+  </header>
+
+  <section>
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <p>Upload or snap a meal photo</p>
       </div>
-    </section>
-    <section class="upload-section">
-      <form id="uploadForm">
-        <label for="mealPhoto" class="dropzone">
-          <span>📷 Drag & drop or click to upload</span>
-          <input type="file" id="mealPhoto" name="mealPhoto" accept="image/*" capture="environment" required>
-        </label>
-        <button type="submit" id="analyzeBtn">🍽️ Analyze Meal</button>
-      </form>
-    </section>
-    <section id="result"></section>
-  </main>
+      <div class="step">
+        <div class="step-number">2</div>
+        <p>Click <strong>Analyze</strong></p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <p>Instantly view nutrition facts</p>
+      </div>
+    </div>
+
+    <label for="file-upload" class="upload-box" id="uploadBox">
+      <p>📸 Drag & Drop or Click to Upload (any image format)</p>
+      <input id="file-upload" type="file" accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.bmp,.tiff" />
+    </label>
+
+    <button class="analyze-btn" id="analyzeBtn">Analyze</button>
+
+    <div id="result" class="results"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Calories Counter AI | Built with ❤️ and AI</p>
+  </footer>
+
   <script>
-    const form = document.getElementById('uploadForm');
-    const resultDiv = document.getElementById('result');
+    const fileInput = document.getElementById('file-upload');
+    const uploadBox = document.getElementById('uploadBox');
     const analyzeBtn = document.getElementById('analyzeBtn');
+    const resultBox = document.getElementById('result');
 
-    form.addEventListener('submit', async (e) => {
+    uploadBox.addEventListener('click', () => fileInput.click());
+
+    uploadBox.addEventListener('dragover', (e) => {
       e.preventDefault();
-      resultDiv.innerHTML = '';
-      resultDiv.className = '';
-      analyzeBtn.disabled = true;
-      analyzeBtn.textContent = 'Analyzing...';
+      uploadBox.style.background = '#fff0d6';
+    });
 
-      const fileInput = document.getElementById('mealPhoto');
+    uploadBox.addEventListener('dragleave', () => {
+      uploadBox.style.background = '#fffaf0';
+    });
+
+    uploadBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      fileInput.files = e.dataTransfer.files;
+      uploadBox.style.background = '#fffaf0';
+    });
+
+    analyzeBtn.addEventListener('click', async () => {
       if (!fileInput.files.length) {
-        resultDiv.textContent = 'Please select a photo.';
-        analyzeBtn.disabled = false;
-        analyzeBtn.textContent = 'Analyze';
+        alert('Please upload an image first!');
         return;
       }
 
+      const file = fileInput.files[0];
       const formData = new FormData();
-      formData.append('mealPhoto', fileInput.files[0]);
+      formData.append('image', file);
+
+      resultBox.innerHTML = '<p class="loading">Analyzing your meal... ⏳</p>';
 
       try {
         const response = await fetch('https://phantoos.app.n8n.cloud/webhook-test/meal-ai', {
@@ -219,68 +249,44 @@
           body: formData
         });
 
-        if (!response.ok) throw new Error('Failed to analyze image.');
-
         const data = await response.json();
-
-        // The response is an array with one object
-        const output = data[0]?.output;
-        if (!output || output.status !== "success") {
-          throw new Error('Analysis failed or invalid response.');
-        }
-
-        // Build the result HTML
-        let html = `
-          <div class="result-section">
-            <h2>Nutrition Facts</h2>
-            <ul style="list-style:none;padding:0;margin:0 0 1rem 0;">
-              <li><strong>Total Calories:</strong> ${output.total.calories} kcal</li>
-              <li><strong>Protein:</strong> ${output.total.protein}g</li>
-              <li><strong>Carbs:</strong> ${output.total.carbs}g</li>
-              <li><strong>Fat:</strong> ${output.total.fat}g</li>
-            </ul>
-            <h3 style="margin-top:1.5rem;">Meal Breakdown</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Food</th>
-                  <th>Qty</th>
-                  <th>Cal</th>
-                  <th>Protein</th>
-                  <th>Carbs</th>
-                  <th>Fat</th>
-                </tr>
-              </thead>
-              <tbody>
-        `;
-
-        for (const food of output.food) {
-          html += `
-            <tr>
-              <td>${food.name}</td>
-              <td>${food.quantity}</td>
-              <td>${food.calories}</td>
-              <td>${food.protein}</td>
-              <td>${food.carbs}</td>
-              <td>${food.fat}</td>
-            </tr>
-          `;
-        }
-
-        html += `
-              </tbody>
-            </table>
-          </div>
-        `;
-
-        resultDiv.innerHTML = html;
-      } catch (err) {
-        resultDiv.innerHTML = `<div class="result-section" style="color:#d32f2f;">Error: ${err.message}</div>`;
-      } finally {
-        analyzeBtn.disabled = false;
-        analyzeBtn.textContent = 'Analyze';
+        displayResults(data);
+      } catch (error) {
+        resultBox.innerHTML = `<p style="color:red;">Error analyzing meal: ${error.message}</p>`;
       }
     });
+
+    function displayResults(data) {
+      if (!data || !data[0] || !data[0].output) {
+        resultBox.innerHTML = '<p style="color:red;">Invalid response from AI server.</p>';
+        return;
+      }
+
+      const output = data[0].output;
+      let html = `<h3>Meal Analysis</h3>`;
+
+      output.food.forEach(item => {
+        html += `
+          <div class="food-item">
+            <strong>${item.name}</strong><br>
+            Quantity: ${item.quantity}<br>
+            Calories: ${item.calories} kcal | Protein: ${item.protein}g | Carbs: ${item.carbs}g | Fat: ${item.fat}g
+          </div>
+        `;
+      });
+
+      html += `
+        <h4>Total Nutrition</h4>
+        <div class="food-item">
+          <strong>Calories:</strong> ${output.total.calories} kcal<br>
+          <strong>Protein:</strong> ${output.total.protein} g<br>
+          <strong>Carbs:</strong> ${output.total.carbs} g<br>
+          <strong>Fat:</strong> ${output.total.fat} g
+        </div>
+      `;
+
+      resultBox.innerHTML = html;
+    }
   </script>
 </body>
 </html>
